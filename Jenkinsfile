@@ -11,9 +11,13 @@ pipeline {
         }
         stage('Build') {
             steps {
-                // Clean and build the project using Maven
-                sh 'mvn clean package'
-                // Build the Docker image after the Maven build
+                // Remove existing .war files if any
+                sh 'rm -rf *.war'
+                // Ensure target directory exists
+                sh 'mkdir -p target'
+                // Create the .war file
+                sh 'jar -cvf target/static-website.war -C my-static-website/src/main/webapp .'
+                // Build the Docker image
                 sh 'docker build -t josephadarsh/ait670-app:latest .'
             }
         }
